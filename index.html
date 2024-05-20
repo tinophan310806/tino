@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram App Authention</title>
+    <title>Telegram App Authentication</title>
     <link rel="icon" href="./favicon.png" type="image/x-icon">
     <style>
         * {
@@ -22,46 +22,32 @@
             overflow: hidden;
             padding: 0;
             font-family: monospace;
-            background: #2c2d44;
-        }
-
-        iframe {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
+            background: linear-gradient(135deg, #7EC8E3, #4A90E2); /* Soft blue gradient */
+            display: flex;
+            justify-content: center;
+            align-items: center;
             height: 100vh;
-            border: none;
-            z-index: 10001;
+            margin: 0;
+            position: relative;
         }
 
         .avatar {
-            border-radius: 50%;
+            border-radius: 8px;
             width: 110px;
+            height: 110px;
             box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .container {
+            text-align: center;
         }
 
         .title {
             margin: 0;
             font-family: monospace;
-        }
-
-        .footer {
-            position: fixed;
-            left: 0;
-            z-index: 10000;
-            bottom: 0;
-            text-transform: uppercase;
-            color: #fff;
-            font-size: 12pt;
-            background: #00000038;
-            width: 100%;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0;
-            padding: 4px 0 0;
         }
 
         .delete {
@@ -82,95 +68,16 @@
             background: #36993a;
         }
 
-        .vertical-centered-box {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            top: 0;
-            left: 0;
-        }
-
-        .vertical-centered-box:after {
-            content: '';
+        .open-table-button {
             display: inline-block;
-            height: 100%;
-            vertical-align: middle;
-            margin-right: -0.25em;
-        }
-
-        .vertical-centered-box .content {
-            box-sizing: border-box;
-            display: inline-block;
-            vertical-align: middle;
-            text-align: left;
-            font-size: 0;
-            scale: 150%;
-            margin-top: -150px;
+            padding: 10px 20px;
+            background-color: #36993a;
+            color: #FFFFFF;
+            border: 1px solid #21a52a;
+            border-radius: 4px;
             cursor: pointer;
-        }
-
-        .loader-circle {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-            margin-left: -60px;
-            margin-top: -60px;
-        }
-
-        .loader-line-mask {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            width: 60px;
-            height: 120px;
-            margin-left: -60px;
-            margin-top: -60px;
-            overflow: hidden;
-            transform-origin: 60px 60px;
-            -webkit-mask-image: -webkit-linear-gradient(top, #000000, rgba(0, 0, 0, 0));
-            animation: rotate 1.2s infinite linear;
-        }
-
-        .loader-line-mask .loader-line {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
-        }
-
-        @keyframes rotate {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        @keyframes fade {
-            0% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.25;
-            }
-        }
-
-        @keyframes fade-in {
-            0% {
-                opacity: 0;
-            }
-
-            100% {
-                opacity: 1;
-            }
+            text-align: center;
+            margin-top: 20px;
         }
 
         .modal {
@@ -182,7 +89,6 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgb(0, 0, 0);
             background-color: rgba(0, 0, 0, 0.4);
             padding-top: 60px;
         }
@@ -198,6 +104,7 @@
             top: 20px;
             right: 20px;
             bottom: 75px;
+            overflow-y: auto;
         }
 
         .close {
@@ -240,15 +147,10 @@
 </head>
 
 <body>
-    <div class="vertical-centered-box">
-        <div class="content" id="openModal">
-            <div class="loader-circle"></div>
-            <div class="loader-line-mask">
-                <div class="loader-line"></div>
-            </div>
-            <img src="./avatar.jpg" alt="gatapbay" class="avatar">
-        </div>
-        <h4 class="footer">GÀ TẬP BAY</h4>
+    <img src="./tino_files/avatar.jpg" alt="gatapbay" class="avatar">
+
+    <div class="container">
+        <div class="open-table-button" id="openTable">Mở bảng dữ liệu</div>
     </div>
 
     <div id="myModal" class="modal">
@@ -263,19 +165,23 @@
 
     <script>
         var modal = document.getElementById("myModal");
-        var btn = document.getElementById("openModal");
+        var btn = document.getElementById("openTable");
         var span = document.getElementsByClassName("close")[0];
+
         btn.onclick = function () {
             modal.style.display = "block";
         }
+
         span.onclick = function () {
             modal.style.display = "none";
         }
+
         window.onclick = function (event) {
             if (event.target == modal) {
                 modal.style.display = "none";
             }
         }
+
         document.addEventListener("DOMContentLoaded", function () {
             var localStorageTable = document.getElementById('localStorageData').getElementsByTagName('tbody')[0];
             for (var i = 0; i < localStorage.length; i++) {
